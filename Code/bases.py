@@ -1,13 +1,13 @@
-#!python
-
+from math import modf
 import string
-# Hint: Use these string constants to encode/decode hexadecimal digits and more
-# string.digits is '0123456789'
-# string.hexdigits is '0123456789abcdefABCDEF'
-# string.ascii_lowercase is 'abcdefghijklmnopqrstuvwxyz'
-# string.ascii_uppercase is 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
-# string.ascii_letters is ascii_lowercase + ascii_uppercase
-# string.printable is digits + ascii_letters + punctuation + whitespace
+
+
+# store all the digits to be used, up to hexatridecimal (base32).
+# stored as a list, the index of the digit used in the array is the value in decimal
+HEXATRI_LIST = string.digits + string.ascii_lowercase
+# create a dictionary that stores all the digits and their values,
+# much faster than repeated iteration through a list, inspiration from Kevin Meyers
+VAL_DICT = {digit: val for val, digit in enumerate(HEXATRI_LIST)}
 
 
 def decode(digits, base):
@@ -17,13 +17,20 @@ def decode(digits, base):
     return: int -- integer representation of number (in base 10)"""
     # Handle up to base 36 [0-9a-z]
     assert 2 <= base <= 36, 'base is out of range: {}'.format(base)
-    # TODO: Decode digits from binary (base 2)
-    # ...
-    # TODO: Decode digits from hexadecimal (base 16)
-    # ...
-    # TODO: Decode digits from any base (2 up to 36)
-    # ...
 
+    neg = False
+    if digits[0] == '-':
+        neg = True
+        digits = digits[1:]
+
+    dec_num = 0
+
+    for i, digit in enumerate(reversed(digits)):
+        dec_num += VAL_DICT[digit] * (base ** i)
+
+    if neg:
+        return -dec_num
+    return dec_num
 
 def encode(number, base):
     """Encode given number in base 10 to digits in given base.
@@ -31,16 +38,39 @@ def encode(number, base):
     base: int -- base to convert to
     return: str -- string representation of number (in given base)"""
     # Handle up to base 36 [0-9a-z]
-    assert 2 <= base <= 36, 'base is out of range: {}'.format(base)
+    assert 1 <= base <= 36, 'base is out of range: {}'.format(base)
     # Handle unsigned numbers only for now
-    assert number >= 0, 'number is negative: {}'.format(number)
-    # TODO: Encode number in binary (base 2)
-    # ...
-    # TODO: Encode number in hexadecimal (base 16)
-    # ...
-    # TODO: Encode number in any base (2 up to 36)
-    # ...
+    # assert number >= 0, 'number is negative: {}'.format(number)
 
+    neg = False
+    if number < 0:
+        neg = True
+        number = -number
+
+    num_str = ''
+
+    if base == 1:
+        num_str = '1' * number
+        return num_str
+
+    # while loop: check while the number does not equal 0
+    while number != 0:
+        # using python math module modf store the decimal, and the whole number from the original
+        # number divided by the base. i.e. 19.8  dec = .8, whole = 19
+        # dec, whole = modf(number/base)
+
+        whole, dec = divmod(number, base)
+
+        # reasign the number variable
+        number = whole
+        # prepend the appropriate digit into a string of the numbers
+        num_str = HEXATRI_LIST[dec] + num_str
+
+    # return the number in the corresponding base
+    if neg:
+        return '-' + num_str
+
+    return num_str
 
 def convert(digits, base1, base2):
     """Convert given digits in base1 to digits in base2.
@@ -51,15 +81,15 @@ def convert(digits, base1, base2):
     # Handle up to base 36 [0-9a-z]
     assert 2 <= base1 <= 36, 'base1 is out of range: {}'.format(base1)
     assert 2 <= base2 <= 36, 'base2 is out of range: {}'.format(base2)
-    # TODO: Convert digits from base 2 to base 16 (and vice versa)
-    # ...
-    # TODO: Convert digits from base 2 to base 10 (and vice versa)
-    # ...
-    # TODO: Convert digits from base 10 to base 16 (and vice versa)
-    # ...
-    # TODO: Convert digits from any base to any base (2 up to 36)
-    # ...
 
+    # check if the given number is base 10,
+    # if it is, encode the number to the requested base
+    # else, decode the number into base 10 then encode into the requested base
+    if base1 == 10:
+        return encode(int(digits), base2)
+
+    dec_digits = decode(digits, base1)
+    return str(encode(int(dec_digits), base2))
 
 def main():
     """Read command-line arguments and convert given digits between bases."""
@@ -76,6 +106,6 @@ def main():
         print('Usage: {} digits base1 base2'.format(sys.argv[0]))
         print('Converts digits from base1 to base2')
 
-
 if __name__ == '__main__':
     main()
+    print(encode(5, 1))
