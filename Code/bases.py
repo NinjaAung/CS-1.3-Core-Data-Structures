@@ -1,4 +1,5 @@
 from math import modf
+from decimal import Decimal
 import string
 
 
@@ -17,11 +18,23 @@ def decode(digits, base):
     return: int -- integer representation of number (in base 10)"""
     # Handle up to base 36 [0-9a-z]
     assert 2 <= base <= 36, 'base is out of range: {}'.format(base)
-
+    frac = False
     neg = False
+    frac_num = 0
+
     if digits[0] == '-':
         neg = True
         digits = digits[1:]
+
+    if '.' in digits:
+        # handles the fractional function of the decode function
+        frac = True
+        fraction = digits[digits.find('.'):]
+        digits = digits[:digits.find('.')]
+        for i, digit in enumerate(fraction):
+            if i != 0:
+                frac_num += VAL_DICT[digit] * (base ** -i)
+
 
     dec_num = 0
 
@@ -29,7 +42,10 @@ def decode(digits, base):
         dec_num += VAL_DICT[digit] * (base ** i)
 
     if neg:
-        return -dec_num
+        dec_num = -dec_num
+    if frac:
+        dec_num += frac_num
+    
     return dec_num
 
 def encode(number, base):
@@ -43,12 +59,28 @@ def encode(number, base):
     # assert number >= 0, 'number is negative: {}'.format(number)
 
     neg = False
+    frac = False
     if number < 0:
         neg = True
         number = -number
 
+
+    if isinstance(number, float):
+        # handles the fractional ascpect of the encode function
+        frac = True
+        dec_i = str(number).find('.')
+        decimal = float(str(number)[dec_i:])
+        dec_str = '.'
+        number = int(str(number)[:dec_i])
+        while decimal != 0.0:
+            rem, whole_num = modf(decimal*base)
+            decimal = rem
+            dec_str += HEXATRI_LIST[int(whole_num)]
+
+
     num_str = ''
 
+    # handles Unary
     if base == 1:
         num_str = '1' * number
         return num_str
@@ -59,8 +91,7 @@ def encode(number, base):
         # number divided by the base. i.e. 19.8  dec = .8, whole = 19
         # dec, whole = modf(number/base)
 
-        whole, dec = divmod(number, base)
-
+        whole, dec = divmod(int(number), base)
         # reasign the number variable
         number = whole
         # prepend the appropriate digit into a string of the numbers
@@ -68,8 +99,9 @@ def encode(number, base):
 
     # return the number in the corresponding base
     if neg:
-        return '-' + num_str
-
+        num_str = '-' + num_str
+    if frac:
+        num_str = num_str + dec_str
     return num_str
 
 def convert(digits, base1, base2):
@@ -108,4 +140,18 @@ def main():
 
 if __name__ == '__main__':
     main()
-    print(encode(5, 1))
+    # print(encode(5, 1))
+    # dec, whole = modf(42.42)
+    # print(dec, whole)
+    # print(42.42 - int(42.42) )
+    # print(1.42 - 1)
+
+    # print(round(Decimal(.42) % 1, 2))
+    # print(encode(42.42, 2))
+    print(encode(15.8787, 16))
+    print(decode('1010.1101', 2))
+    print(encode(decode('1010.1101', 2), 2))
+
+    # n = str(.542)
+    # print(n[2:])
+    # print(int(n[2:]))

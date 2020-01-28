@@ -117,6 +117,11 @@ class BasesEncodeTest(unittest.TestCase):
         assert encode(13579, 10) == '13579'
         assert encode(24680, 10) == '24680'
 
+    # def test_encode_float(self):
+    #     assert encode(42.42, 2) == '101010.101010'
+    #     assert encode(35.35, 10) == '35.35'
+    #     assert encode(10.160, 16) == 'a.10'
+
     def test_encode_hexadecimal(self):
         assert encode(10, 16) == 'a'
         assert encode(15, 16) == 'f'
