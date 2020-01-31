@@ -48,6 +48,31 @@ def decode(digits, base):
     
     return dec_num
 
+def neg_bin_decode(digits):
+    neg = False
+    if digits[0] == 1:
+        neg = True
+    dec_num = decode(digits[1:], 2)
+
+    if neg:
+        return -dec_num
+    return dec_num
+
+def neg_bin_encode(number, bits=32):
+    neg = False
+    if number < 0:
+        neg = True
+        number = -number
+    bin_num = encode(number, 2)
+    len_of_bin = len(bin_num)
+    if bits - len_of_bin <= 0:
+        return 'you must either increase the amount of bits, or choose a smaller number to encode'
+    if neg:
+        return '1' + ('0'*(bits-len_of_bin - 1)) + bin_num
+    return f"{'0'*(bits-len_of_bin) + bin_num} in {bits} bits, using ones compliment"
+
+
+
 def encode(number, base):
     """Encode given number in base 10 to digits in given base.
     number: int -- integer representation of number (in base 10)
@@ -148,10 +173,11 @@ if __name__ == '__main__':
 
     # print(round(Decimal(.42) % 1, 2))
     # print(encode(42.42, 2))
-    print(encode(15.8787, 16))
-    print(decode('1010.1101', 2))
-    print(encode(decode('1010.1101', 2), 2))
+    # print(encode(15.8787, 16))
+    # print(decode('1010.1101', 2))
+    # print(encode(decode('1010.1101', 2), 2))
 
     # n = str(.542)
     # print(n[2:])
     # print(int(n[2:]))
+    print(neg_bin_encode(10, 8))
