@@ -6,6 +6,9 @@ import string
 # string.ascii_uppercase is 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
 # string.ascii_letters is ascii_lowercase + ascii_uppercase
 
+def reverse(text):
+    return text[::-1]
+
 
 def is_palindrome(text):
     """A string of characters is a palindrome if it reads the same forwards and
@@ -13,22 +16,31 @@ def is_palindrome(text):
     # implement is_palindrome_iterative and is_palindrome_recursive below, then
     # change this to call your implementation to verify it passes all tests
     assert isinstance(text, str), 'input is not a string: {}'.format(text)
-    return is_palindrome_iterative(text)
-    # return is_palindrome_recursive(text)
+    # return is_palindrome_iterative(text)
+    return is_palindrome_recursive(text)
 
 
 def is_palindrome_iterative(text):
-    # TODO: implement the is_palindrome function iteratively here
-    pass
-    # once implemented, change is_palindrome to call is_palindrome_iterative
-    # to verify that your iterative implementation passes all tests
+    # implement the is_palindrome function iteratively here
+    text = [char for char in text.lower() if char.isalpha()]
+    half_i = len(text)//2
+    if len(text) % 2:
+        return text[:half_i+1][::-1] == text[half_i:]
+    return text[:half_i][::-1] == text[half_i:]
 
 
 def is_palindrome_recursive(text, left=None, right=None):
-    # TODO: implement the is_palindrome function recursively here
-    pass
-    # once implemented, change is_palindrome to call is_palindrome_recursive
-    # to verify that your iterative implementation passes all tests
+    # implement the is_palindrome function recursively here
+    if left is None:
+        text = [char for char in text.lower() if char.isalpha()]
+        left = 0
+        right = len(text) - 1
+
+    while left < right:
+        if text[left] == text[right]:
+            return is_palindrome_recursive(text, left+1, right-1)
+        return False
+    return True
 
 
 def main():
@@ -47,3 +59,4 @@ def main():
 
 if __name__ == '__main__':
     main()
+    
