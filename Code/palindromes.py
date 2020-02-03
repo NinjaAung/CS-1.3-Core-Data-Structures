@@ -29,7 +29,7 @@ def is_palindrome_iterative(text):
 
 def is_palindrome_recursive(text, left=None, right=None):
     # implement the is_palindrome function recursively here
-    if left is None:
+    if not left:
         left = 0
         right = len(text) - 1
 
