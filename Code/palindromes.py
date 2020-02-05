@@ -15,17 +15,23 @@ def is_palindrome(text):
     assert isinstance(text, str), 'input is not a string: {}'.format(text)
     text = [char for char in text.lower() if char.isalnum()]
 
-    # return is_palindrome_iterative(text)
-    return is_palindrome_recursive(text)
+    return is_palindrome_iterative(text)
+    # return is_palindrome_recursive(text)
 
 
 def is_palindrome_iterative(text):
     # implement the is_palindrome function iteratively here
-    half_i = len(text)//2
-    if len(text) % 2:
-        return text[:half_i+1][::-1] == text[half_i:]
-    return text[:half_i][::-1] == text[half_i:]
-
+    # half_i = len(text)//2
+    last_i = len(text)-1
+    # if len(text) % 2:
+    #     return text[:half_i+1][::-1] == text[half_i:]
+    # return text[:half_i][::-1] == text[half_i:]
+    for i in range(len(text)//2):
+        if text[i] == text[last_i]:
+            last_i -= 1
+        else:
+            return False
+    return True
 
 def is_palindrome_recursive(text, left=None, right=None):
     # implement the is_palindrome function recursively here
@@ -56,4 +62,3 @@ def main():
 
 if __name__ == '__main__':
     main()
-    
