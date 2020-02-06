@@ -95,4 +95,5 @@ def main():
 
 if __name__ == '__main__':
     main()
-    print(find_all_indexes('aaa', 'a'))
+    # print(find_all_indexes('aaa', 'a'))
+    
