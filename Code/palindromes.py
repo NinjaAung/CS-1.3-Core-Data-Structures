@@ -21,7 +21,8 @@ def is_palindrome(text):
 
 def is_palindrome_iterative(text):
     # implement the is_palindrome function iteratively here
-    # half_i = len(text)//2
+    """O(n/2) - searches through half the list and compares both sides to itself. 
+        dependent on half of n items in the string"""
     last_i = len(text)-1
     # if len(text) % 2:
     #     return text[:half_i+1][::-1] == text[half_i:]
@@ -35,6 +36,8 @@ def is_palindrome_iterative(text):
 
 def is_palindrome_recursive(text, left=None, right=None):
     # implement the is_palindrome function recursively here
+    '''Time complexity: o(n/2) searches through half the list and compares both sides to itself.
+        dependent on half of n items in the string'''
     if not left:
         left = 0
         right = len(text) - 1
