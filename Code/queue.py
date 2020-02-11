@@ -114,6 +114,16 @@ class ArrayQueue(object):
             raise ValueError
         return self.list.pop(0)
 
+class deque(LinkedQueue):
+    def push_front(self, item):
+        """Add an item to the front of the queue"""
+        self.list.insert_at_index(0, item)
+
+    def push_back(self, item):
+        """Add an item to the back of the queue"""
+        self.list.append(item)
+    
+        
 
 # Implement LinkedQueue and ArrayQueue above, then change the assignment below
 # to use each of your Queue implementations to verify they each pass all tests

@@ -6,6 +6,7 @@ class Node(object):
         """Initialize this node with the given data."""
         self.data = data
         self.next = None
+        self.previous = None
 
     def __repr__(self):
         """Return a string representation of this node."""
@@ -27,7 +28,7 @@ class LinkedList(object):
     def __str__(self):
         """Return a formatted string representation of this linked list."""
         items = ['({!r})'.format(item) for item in self.items()]
-        return '[{}]'.format(' -> '.join(items))
+        return '[{}]'.format(' <-> '.join(items))
 
     def __repr__(self):
         """Return a string representation of this linked list."""
@@ -79,9 +80,16 @@ class LinkedList(object):
         if not (0 <= index < self.size):
             raise ValueError('List index out of range: {}'.format(index))
         # Find the node at the given index and return its data
-        node = self.head
-        for _ in range(index):
-            node = node.next
+        node = None
+        if index <= self.size // 2:
+            node = self.head
+            for _ in range(index):
+                node = node.next
+        elif index > self.size // 2:
+            node = self.tail
+            for _ in range((self.size - 1) - index):
+                node = node.previous
+
         return node.data
 
     def insert_at_index(self, index, item):
@@ -93,24 +101,36 @@ class LinkedList(object):
         if not (0 <= index <= self.size):
             raise ValueError('List index out of range: {}'.format(index))
         # Find the node before the given index and insert item after it
-        new_node = Node(item)
-        node = self.head
         if index == 0:
             self.prepend(item)
-            return
+        elif index == self.size:
+            self.append(item)
+        elif index <= self.size // 2:
+            new_node = Node(item)
+            node = self.head
+            for _ in range(index-1):
+                node = node.next
 
-        for _ in range(index-1):
-            node = node.next
+            new_node.previous = node
+            new_node.next = node.next
 
-        if node.next is None:
+            node.next.previous = new_node
             node.next = new_node
-            self.tail = new_node
+
             self.size += 1
-            return
-        next_node = node.next
-        node.next = new_node
-        new_node.next = next_node
-        self.size += 1
+        elif index > self.size // 2:
+            new_node = Node(item)
+            node = self.tail
+            for _ in range((self.size - 1) - (index + 1)):
+                node = node.previous
+
+            new_node.previous = node.previous
+            new_node.next = node
+
+            node.previous.next = new_node
+            node.previous = new_node
+
+            self.size += 1
     def append(self, item):
         """Insert the given item at the tail of this linked list.
         Best and worst case running time: ??? under what conditions? [TODO]"""
@@ -123,7 +143,8 @@ class LinkedList(object):
         else:
             # Otherwise insert new node after tail
             self.tail.next = new_node
-        self.size += 1        
+            new_node.previous = self.tail
+        self.size += 1
         # Update tail to new node regardless
         self.tail = new_node
 
@@ -138,8 +159,9 @@ class LinkedList(object):
             self.tail = new_node
         else:
             # Otherwise insert new node before head
+            self.head.previous = new_node
             new_node.next = self.head
-        self.size += 1        
+        self.size += 1
         # Update head to new node regardless
         self.head = new_node
 
@@ -177,7 +199,6 @@ class LinkedList(object):
                 node = node.next
         if node is None:
             raise ValueError
-        
 
 
     def delete(self, item):
@@ -187,7 +208,6 @@ class LinkedList(object):
         # Start at the head node
         node = self.head
         # Keep track of the node before the one containing the given item
-        previous = None
         # Create a flag to track if we have found the given item
         found = False
         # Loop until we have found the given item or the node is None
@@ -198,30 +218,34 @@ class LinkedList(object):
                 found = True
             else:
                 # Skip to the next node
-                previous = node
                 node = node.next
         # Check if we found the given item or we never did and reached the tail
         if found:
             # Check if we found a node in the middle of this linked list
             if node is not self.head and node is not self.tail:
                 # Update the previous node to skip around the found node
-                previous.next = node.next
+                node.previous.next = node.next
+                node.next.previous = node.previous
                 # Unlink the found node from its next node
                 node.next = None
+                node.previous = None
             # Check if we found a node at the head
             if node is self.head:
                 # Update head to the next node
                 self.head = node.next
+
                 # Unlink the found node from the next node
                 node.next = None
+                node.previous = None
             # Check if we found a node at the tail
             if node is self.tail:
                 # Check if there is a node before the found node
-                if previous is not None:
+                if node.previous is not None:
                     # Unlink the previous node from the found node
-                    previous.next = None
+                    node.previous.next = None
+
                 # Update tail to the previous node regardless
-                self.tail = previous
+                self.tail = node.previous
             self.size -= 1
         else:
             # Otherwise raise an error to tell the user that delete has failed
@@ -239,6 +263,7 @@ def test_linked_list():
     print(ll)
     ll.append('C')
     print(ll)
+    print(ll.get_at_index(1))
     print('head: {}'.format(ll.head))
     print('tail: {}'.format(ll.tail))
     print('size: {}'.format(ll.size))

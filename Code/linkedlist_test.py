@@ -11,6 +11,7 @@ class NodeTest(unittest.TestCase):
         node = Node(data)
         assert node.data is data
         assert node.next is None
+        assert node.previous is None
 
 
 class LinkedListTest(unittest.TestCase):
@@ -25,6 +26,16 @@ class LinkedListTest(unittest.TestCase):
         ll = LinkedList(['A', 'B', 'C'])
         assert ll.head.data == 'A'  # first item
         assert ll.tail.data == 'C'  # last item
+        assert ll.size == 3
+
+    def test_init_previous(self):
+        ll = LinkedList(['A', 'B', 'C'])
+        assert ll.head.data == 'A'  # first item
+        assert ll.head.previous is None
+        assert ll.head.next.data == 'B'
+        assert ll.tail.data == 'C'  # last item
+        assert ll.tail.previous.data == 'B'
+        assert ll.tail.next is None
         assert ll.size == 3
 
     def test_items(self):
@@ -100,9 +111,14 @@ class LinkedListTest(unittest.TestCase):
         ll.insert_at_index(2, 'C')  # insert 'C' between 'B' and 'D'
         assert ll.head.data == 'A'  # unchanged (at index 0)
         assert ll.tail.data == 'D'  # unchanged (now at index 3)
+        assert ll.tail.previous.data == 'C'
         assert ll.size == 4
+        ll.insert_at_index(3, 'E')
+        assert ll.head.data == 'A'
+        assert ll.tail.data == 'D'
+        assert ll.tail.previous.data == 'E'
         with self.assertRaises(ValueError):
-            ll.insert_at_index(5, 'X')  # index too high
+            ll.insert_at_index(6, 'X')  # index too high
         with self.assertRaises(ValueError):
             ll.insert_at_index(-1, 'Y')  # index too low
 
