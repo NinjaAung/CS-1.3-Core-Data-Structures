@@ -34,6 +34,12 @@ class LinkedList(object):
         """Return a string representation of this linked list."""
         return 'LinkedList({!r})'.format(self.items())
 
+    def __iter__(self):
+        node = self.head
+        while node != None:
+            yield node.data
+            node = node.next
+
     def items(self):
         """Return a list of all items in this linked list.
         Best and worst case running time: Theta(n) for n items in the list
@@ -268,12 +274,17 @@ def test_linked_list():
     print('tail: {}'.format(ll.tail))
     print('size: {}'.format(ll.size))
     print('length: {}'.format(ll.length()))
-
+    print()
     print('Getting items by index:')
     for index in range(ll.size):
         item = ll.get_at_index(index)
         print('get_at_index({}): {!r}'.format(index, item))
 
+    print()
+    print('iterate through the linked list: ')
+    for item in ll:
+        print(item)
+    print()
     print('Deleting items:')
     ll.delete('B')
     print(ll)
