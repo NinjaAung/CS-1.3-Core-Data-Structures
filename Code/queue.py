@@ -80,7 +80,7 @@ class ArrayQueue(object):
     def is_empty(self):
         """Return True if this queue is empty, or False otherwise."""
         # Check if empty
-        if len(self.list) == 0:
+        if self.list == []:
              return True
         return False
 
@@ -122,7 +122,7 @@ class deque(LinkedQueue):
     def push_back(self, item):
         """Add an item to the back of the queue"""
         self.list.append(item)
-    
+
         
 
 # Implement LinkedQueue and ArrayQueue above, then change the assignment below

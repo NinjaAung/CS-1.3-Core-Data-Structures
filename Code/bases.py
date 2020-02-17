@@ -5,7 +5,7 @@ import string
 
 # store all the digits to be used, up to hexatridecimal (base32).
 # stored as a list, the index of the digit used in the array is the value in decimal
-HEXATRI_LIST = string.digits + string.ascii_lowercase
+HEXATRI_LIST = string.digits + string.ascii_letters + string.punctuation
 # create a dictionary that stores all the digits and their values,
 # much faster than repeated iteration through a list, inspiration from Kevin Meyers
 VAL_DICT = {digit: val for val, digit in enumerate(HEXATRI_LIST)}
@@ -17,7 +17,7 @@ def decode(digits, base):
     base: int -- base of given number
     return: int -- integer representation of number (in base 10)"""
     # Handle up to base 36 [0-9a-z]
-    assert 2 <= base <= 36, 'base is out of range: {}'.format(base)
+    assert 2 <= base <= 94, 'base is out of range: {}'.format(base)
     frac = False
     neg = False
     frac_num = 0
@@ -180,4 +180,5 @@ if __name__ == '__main__':
     # n = str(.542)
     # print(n[2:])
     # print(int(n[2:]))
-    print(neg_bin_encode(10, 8))
+    # print(neg_bin_encode(10, 8))
+    print(decode("100000", 94))

@@ -38,7 +38,7 @@ def is_palindrome_recursive(text, left=None, right=None):
     # implement the is_palindrome function recursively here
     '''Time complexity: o(n/2) searches through half the list and compares both sides to itself.
         dependent on half of n items in the string'''
-    if not left:
+    if left is None and right is None:
         left = 0
         right = len(text) - 1
 

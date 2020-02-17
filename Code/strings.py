@@ -10,7 +10,7 @@ def contains(text, pattern):
     return cont
 
 def contains_iter(text, pattern):
-    return pattern in text
+    return True if find_index(text, pattern) is not None else False
 
 
 def find_index(text, pattern):
@@ -35,6 +35,7 @@ def find_index(text, pattern):
                 pattern_i = 0
             else:
                 text_i += 1
+    return None
 
 
 def find_all_indexes(text, pattern):
