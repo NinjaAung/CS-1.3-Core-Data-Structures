@@ -59,7 +59,7 @@ def binary_search_recursive(array, item, left=None, right=None):
     '''time complexity o(log(n)) - it only goes until the item is found, but searches less than half
     by comparing the values to the middle of the sorted array'''
     # implement binary search recursively here
-    if left is None:
+    if left is None and right is None:
         left = 0
         right = len(array) - 1
     mid_i = (left + right) // 2
