@@ -111,12 +111,12 @@ class HashTable(object):
         if entry is not None:  # Found
             # In this case, the given key's value is being updated
             # Remove the old key-value entry from the bucket first
-            bucket.delete((key, self.get(key)))
-        
+            bucket.delete(entry)
+            self.size -= 1
         # Insert the new key-value entry into the bucket in either case
-        item = (key, value)
-        print(item)
-        bucket.append(item)
+        # item = (key, value)
+        
+        bucket.append((key, value))
         self.size += 1
         #  Check if the load factor exceeds a threshold such as 0.75
         # If so, automatically resize to reduce the load factor
@@ -153,8 +153,9 @@ class HashTable(object):
             new_size = len(self.buckets) / 2  # Half size
         # Get a list to temporarily hold all current key-value entries
         temp_list = self.items()
+        self.size = 0
         # Create a new list of new_size total empty linked list buckets
-        self.buckets = [LinkedList for i in range(new_size)]
+        self.buckets = [LinkedList() for i in range(new_size)]
         # Insert each key-value entry into the new list of buckets,
         # which will rehash them into a new bucket index based on the new size
         for key, value in temp_list:

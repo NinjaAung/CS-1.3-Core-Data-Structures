@@ -51,6 +51,7 @@ def find_all_indexes(text, pattern):
         return [x for x in range(len(text))]
     elif len(pattern) == 1:
         return [i for i, x in enumerate(text) if pattern == x]
+        
     while text_i < len(text) and pattern_i < len(pattern):
         if pattern[pattern_i] == text[text_i]:
             if pattern_i == len(pattern) - 1:
