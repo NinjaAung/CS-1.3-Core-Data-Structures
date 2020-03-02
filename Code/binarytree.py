@@ -1,3 +1,6 @@
+from queue import LinkedQueue
+from stack import LinkedStack
+
 class BinaryTreeNode:
     """Class creating the Node object for the binary tree"""
 
@@ -321,8 +324,9 @@ class BinarySearchTree:
         """Traverse this binary tree with iterative in-order traversal (DFS).
         Start at the given node and visit each node with the given function.
         Running time: o(n) depends on the number of items in the tree
-        TODO: Memory usage: ??? Why and under what conditions?"""
-        # TODO: Traverse in-order without using recursion (stretch challenge)
+        TODO: Memory usage: o(log n) Why and under what conditions?"""
+        # Traverse in-order without using recursion (stretch challenge)
+
 
     def items_pre_order(self):
         """Return a pre-order list of all items in this binary search tree."""
@@ -359,7 +363,7 @@ class BinarySearchTree:
         items = []
         if not self.is_empty():
             # Traverse tree post-order from root, appending each node's item
-            self._traverse_post_order_recursive(self.root, items.append)
+            self._traverse_post_order_iterative(self.root, items.append)
         # Return post-order list of all items in tree
         return items
 
@@ -380,9 +384,14 @@ class BinarySearchTree:
         """Traverse this binary tree with iterative post-order traversal (DFS).
         Start at the given node and visit each node with the given function.
         Running time: o(n) depends on the number of items in the tree
-        TODO: Memory usage: ??? Why and under what conditions?"""
-        # TODO: Traverse post-order without using recursion (stretch challenge)
+        Memory usage: o(h) the longest the stack will get is the height of the lowest node."""
+        # Traverse post-order without using recursion (stretch challenge)
+        stack = LinkedStack()
+        stack.push(node)
+        while len(stack) != 0:
+            pass
 
+       
     def items_level_order(self):
         """Return a level-order list of all items in this binary search tree."""
         items = []
@@ -397,22 +406,23 @@ class BinarySearchTree:
         Start at the given node and visit each node with the given function.
         Running time: o(n) depends on the number of items in the tree        
         TODO: Memory usage: ??? Why and under what conditions?"""
-        # TODO: Create queue to store nodes not yet traversed in level-order
-        queue = []
-        # TODO: Enqueue given starting node
-        queue.append(start_node)
-        # TODO: Loop until queue is empty
+        # Create queue to store nodes not yet traversed in level-order
+        # uses a linked Queue for the most efficiency. 
+        queue = LinkedQueue()
+        # Enqueue given starting node
+        queue.enqueue(start_node)
+        # Loop until queue is empty
         while len(queue) != 0:
-            # TODO: Dequeue node at front of queue
-            node = queue.pop(0)
-            # TODO: Visit this node's data with given function
+            # Dequeue node at front of queue
+            node = queue.dequeue()
+            # Visit this node's data with given function
             visit(node.data)
-            # TODO: Enqueue this node's left child, if it exists
+            # Enqueue this node's left child, if it exists
             if node.left is not None:
-                queue.append(node.left)
-            # TODO: Enqueue this node's right child, if it exists
+                queue.enqueue(node.left)
+            # Enqueue this node's right child, if it exists
             if node.right is not None:
-                queue.append(node.right)
+                queue.enqueue(node.right)
 
 
 def test_binary_search_tree():

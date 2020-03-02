@@ -20,6 +20,9 @@ class LinkedQueue(object):
         """Return a string representation of this queue."""
         return 'Queue({} items, front={})'.format(self.length(), self.front())
 
+    def __len__(self):
+        return self.count
+
     def is_empty(self):
         """Return True if this queue is empty, or False otherwise."""
         # Check if empty
