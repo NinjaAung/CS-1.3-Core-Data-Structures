@@ -10,37 +10,32 @@ def contains(text, pattern):
     return cont
 
 def contains_iter(text, pattern):
+    """Checks through the text to see if a pattern is in the text
+    o(n) based off the number of items in the text"""
     return True if find_index(text, pattern) is not None else False
 
 
 def find_index(text, pattern):
     """Return the starting index of the first occurrence of pattern in text,
-    or None if not found."""
+    or None if not found.
+    o(n) runtime, based off the length of the text."""
     assert isinstance(text, str), 'text is not a string: {}'.format(text)
     assert isinstance(pattern, str), 'pattern is not a string: {}'.format(text)
     # Implement find_index here (iteratively and/or recursively)
-    text_i = 0
-    pattern_i = 0
-    if pattern == "":
+    indexes = find_all_indexes(text, pattern)
+
+    if text == pattern:
         return 0
-    while pattern_i < len(pattern) and text_i < len(text):
-        if pattern[pattern_i] == text[text_i]:
-            if pattern_i == len(pattern) - 1:
-                return text_i - pattern_i
-            text_i += 1
-            pattern_i += 1
-        elif pattern[pattern_i] != text[text_i]:
-            if pattern_i != 0:
-                text_i -= pattern_i - 1
-                pattern_i = 0
-            else:
-                text_i += 1
-    return None
+    if len(indexes) == 0:
+        return None
+    else:
+        return indexes[0]
 
 
 def find_all_indexes(text, pattern):
     """Return a list of starting indexes of all occurrences of pattern in text,
-    or an empty list if not found."""
+    or an empty list if not found.
+    o(n) runtime, based off the length of the text."""
     assert isinstance(text, str), 'text is not a string: {}'.format(text)
     assert isinstance(pattern, str), 'pattern is not a string: {}'.format(text)
     # Implement find_all_indexes here (iteratively and/or recursively)
@@ -51,6 +46,10 @@ def find_all_indexes(text, pattern):
         return [x for x in range(len(text))]
     elif len(pattern) == 1:
         return [i for i, x in enumerate(text) if pattern == x]
+    elif len(pattern) > len(text):
+        return []
+    elif text == pattern:
+        return [0]
         
     while text_i < len(text) and pattern_i < len(pattern):
         if pattern[pattern_i] == text[text_i]:
